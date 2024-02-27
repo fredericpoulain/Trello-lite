@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <div class="text-center">
+        <h1 class="text-4xl my-12">Enregistrement</h1>
+        {{ form_errors(registrationForm) }}
+
+        {{ form_start(registrationForm, {
+            attr: {
+                class: 'text-start w-1/2 mx-auto'
+            }
+        }) }}
+        <div>
+            {{ form_label(registrationForm.email ) }}
+            {{ form_errors(registrationForm.email) }}
+            {{ form_widget(registrationForm.email ) }}
+        </div>
+        <div>
+            {{ form_label(registrationForm.userName ) }}
+            {{ form_errors(registrationForm.userName) }}
+            {{ form_widget(registrationForm.userName ) }}
+        </div>
+        <div>
+            {{ form_label(registrationForm.plainPassword ) }}
+            {{ form_errors(registrationForm.plainPassword) }}
+            {{ form_widget(registrationForm.plainPassword ) }}
+        </div>
+        <div>
+            <div>
+                {{ form_errors(registrationForm.agreeTerms) }}
+            </div>
+            <div class="flex h-6 items-center mb-5">
+
+                {{ form_widget(registrationForm.agreeTerms, {
+                    'attr': {'class': 'h-6 w-6 me-3 accent-cyan-400'}
+                }) }}
+                {{ form_label(registrationForm.agreeTerms, 'J\'accepte les conditions * ') }}
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button type="submit"
+                    class="bg-cyan-500 hover:bg-cyan-400 font-bold rounded-lg p-3 transition-colors duration-200 text-black"
+            >
+                S'enregistrer
+            </button>
+        </div>
+        {{ form_end(registrationForm) }}
+    </div>
+
+
+
+
+{% endblock %}

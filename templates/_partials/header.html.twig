@@ -1,0 +1,28 @@
+<header class="dark:bg-slate-800 p-7 text-lg border-b-2 border-gray-600 flex justify-between ">
+    <div class="text-4xl uppercase">
+        Worklab
+    </div>
+    <nav class="flex items-center justify-center">
+        <ul class="flex space-x-4">
+            <li>
+                <a href="{{ path('app_home') }}" class="hover:text-cyan-400 transition-colors duration-200">Accueil</a>
+            </li>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <li>
+                    <a href="#" class="hover:text-cyan-400 transition-colors duration-200">{{ app.user.username }}</a>
+                </li>
+                <li>
+                    <a href="{{ path('app_logout') }}" class="hover:text-cyan-400 transition-colors duration-200">Déconnexion</a>
+                </li>
+            {% else %}
+                <li>
+                    <a href="{{ path('app_login') }}" class="hover:text-cyan-400 transition-colors duration-200">Connexion</a>
+                </li>
+                <li>
+                    <a href="{{ path('app_register') }}" class="hover:text-cyan-400 transition-colors duration-200">Inscription</a>
+                </li>
+            {% endif %}
+
+        </ul>
+    </nav>
+</header>
