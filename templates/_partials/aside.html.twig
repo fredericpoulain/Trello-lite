@@ -1,19 +1,41 @@
 <!-- Menu de gauche -->
 <div class="w-80 border-r-2 border-gray-600">
     <div class="flex flex-col h-full p-4">
-        <!-- Bouton d'ajout -->
-        <button class="bg-cyan-500 hover:bg-cyan-400 font-bold rounded-lg p-3 transition-colors duration-200 text-black uppercase">
-            Ajouter
-        </button>
+{#        <button class="bg-cyan-500 hover:bg-cyan-400 font-bold rounded-lg p-3 transition-colors duration-100 text-black uppercase">#}
+{#            Ajouter un worklab#}
+{#        </button>#}
+
+        {{ render(controller('App\\Controller\\WorklabController::displayForm')) }}
+
 
         <!-- Liste de liens -->
+{#        {{ dump(globalWorklabList) }}#}
+{#        {% if globalWorklabList is not empty %}#}
+{#            {% for worklab in globalWorklabList %}#}
+{#                {{ dump(worklab.name) }}#}
+{#            {% endfor %}#}
+
+{#        {% endif %}#}
         <ul class="mt-4">
-            <li>
-                <a href="#" class="block hover:bg-cyan-400 hover:text-black py-2 px-4 rounded-lg transition-colors duration-200">worklab1</a>
-            </li>
-            <li>
-                <a href="#" class="block hover:bg-cyan-400 hover:text-black py-2 px-4 rounded-lg transition-colors duration-200">worklab2</a>
-            </li>
+            {% if globalWorklabList is not empty %}
+                {% for worklab in globalWorklabList %}
+                    <li class="flex justify-between items-center block hover:bg-cyan-400 hover:text-black py-2 px-4 rounded-lg transition-colors duration-100">
+                        <a href=""
+                           class="w-5/6 truncate">
+                            {{ worklab.name }}
+                        </a>
+                        <div class="p-1 hover:text-red-500 cursor-pointer transition-colors duration-100">
+                            <a href="{{ path('app_worklab_delete', {id:worklab.id}) }}" onclick="return confirm('Certain de vouloir supprimer ce worklab ?')">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+
+                        </div>
+                    </li>
+                {% endfor %}
+
+            {% endif %}
+
+
 
         </ul>
     </div>

@@ -1,0 +1,16 @@
+<div>
+    {{ form_start(form) }}
+    <div class="text-center mb-2">
+        {{ form_label(form.name ) }}
+    </div>
+    {{ form_errors(form.name) }}
+    {{ form_widget(form.name) }}
+    <div class="text-center">
+        <button type="submit"
+                class="w-full bg-cyan-500 hover:bg-cyan-400 font-bold rounded-lg p-3 transition-colors duration-100 text-black"
+        >
+            Créer
+        </button>
+    </div>
+    {{ form_end(form) }}
+</div>

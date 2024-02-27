@@ -13,4 +13,10 @@ class HomeController extends AbstractController
     {
         return $this->render('home/home.html.twig');
     }
+
+    #[Route('/ajouter-un-worklab', name: 'app_addWorkLab')]
+    public function workLab(): Response
+    {
+        return $this->render('home/home.html.twig');
+    }
 }

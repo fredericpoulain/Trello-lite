@@ -5,6 +5,7 @@
     <title>{% block title %}Welcome!{% endblock %}</title>
     <link rel="icon"
           href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+    <script src="https://kit.fontawesome.com/2c9d0ca7cb.js" crossorigin="anonymous" defer></script>
     {% block stylesheets %}
         {{ encore_entry_link_tags('styles') }}
     {% endblock %}
@@ -16,7 +17,9 @@
 <body class="overflow-hidden dark:bg-slate-800 dark:text-white" >
 {% include '_partials/header.html.twig' %}
 <div class="flex h-screen">
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
     {% include '_partials/aside.html.twig' %}
+    {% endif %}
 
     <!-- Contenu principal prenant le reste de la largeur -->
     <div class="flex-1 p-4">
@@ -24,7 +27,7 @@
     </div>
 
 </div>
-{#{% include '_partials/footer.html.twig' %}#}
+
 
 
 
