@@ -20,7 +20,7 @@
             {% if globalWorklabList is not empty %}
                 {% for worklab in globalWorklabList %}
                     <li class="flex justify-between items-center block hover:bg-cyan-400 hover:text-black py-2 px-4 rounded-lg transition-colors duration-100">
-                        <a href=""
+                        <a href="{{ path('app_worklab_active', {id:worklab.id}) }}"
                            class="w-5/6 truncate">
                             {{ worklab.name }}
                         </a>

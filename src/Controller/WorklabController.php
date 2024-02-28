@@ -4,15 +4,17 @@ namespace App\Controller;
 
 use App\Entity\Worklab;
 use App\Form\WorklabType;
+use App\Repository\WorklabRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/worklab', name: 'app_worklab_')]
 class WorklabController extends AbstractController
 {
-    #[Route('/worklab/form', name: 'app_worklab_form')]
+    #[Route('/form', name: 'form')]
     public function displayForm(): Response
     {
         $form = $this->createForm(WorklabType::class, null, [
@@ -23,7 +25,7 @@ class WorklabController extends AbstractController
         ]);
     }
 
-    #[Route('/worklab/create', name: 'app_worklab_create')]
+    #[Route('/create', name: 'create')]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
@@ -35,10 +37,7 @@ class WorklabController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Traitez les données du formulaire  ici
-            // Par exemple, enregistrez l'entité dans la base de données
-//            $worklab = $form->getData();
-            // $entityManager = $this->getDoctrine()->getManager();
+
             $worklab->setUser($user);
             $entityManager->persist($worklab);
             $entityManager->flush();
@@ -51,9 +50,10 @@ class WorklabController extends AbstractController
         $this->addFlash('error', 'Le formulaire n\'est pas valide.');
         return $this->redirectToRoute('app_home');
     }
-    #[Route('/worklab/delete/{id}', name: 'app_worklab_delete')]
+
+    #[Route('/delete/{id}', name: 'delete')]
     public function delete(
-        Worklab $worklab,
+        Worklab                $worklab,
         EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
@@ -64,6 +64,19 @@ class WorklabController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('successMessageFlash', 'Worklab supprimé avec succès.');
+        return $this->redirectToRoute('app_home');
+    }
+
+    #[Route('/active/{id}', name: 'active')]
+    public function active(Worklab $worklab, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        if ($user === null) {
+            return $this->redirectToRoute('app_home');
+        }
+
+        $worklab->setUpdatedAt(new \DateTimeImmutable('now'));
+        $entityManager->flush();
         return $this->redirectToRoute('app_home');
     }
 }

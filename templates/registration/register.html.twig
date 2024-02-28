@@ -1,3 +1,9 @@
+{% set emailErrors = registrationForm.email.vars.errors %}
+{% set usernameErrors = registrationForm.userName.vars.errors %}
+{% set passErrors = registrationForm.plainPassword.vars.errors %}
+{% set checkboxErrors = registrationForm.agreeTerms.vars.errors %}
+
+
 {% extends 'base.html.twig' %}
 
 {% block title %}Register{% endblock %}
@@ -14,25 +20,51 @@
         }) }}
         <div>
             {{ form_label(registrationForm.email ) }}
-            {{ form_errors(registrationForm.email) }}
+            {% if emailErrors|length %}
+                <ul class="bg-red-300 p-2 rounded-lg mb-1.5 font-bold text-center">
+                    {% for error in emailErrors %}
+                        <li class="text-red-950">{{ error.message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
             {{ form_widget(registrationForm.email ) }}
         </div>
+
         <div>
             {{ form_label(registrationForm.userName ) }}
-            {{ form_errors(registrationForm.userName) }}
+            {% if usernameErrors|length %}
+                <ul class="bg-red-300 p-2 rounded-lg mb-1.5 font-bold text-center">
+                    {% for error in usernameErrors %}
+                        <li class="text-red-950">{{ error.message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
             {{ form_widget(registrationForm.userName ) }}
         </div>
+
         <div>
             {{ form_label(registrationForm.plainPassword ) }}
-            {{ form_errors(registrationForm.plainPassword) }}
+            {% if passErrors|length %}
+                <ul class="bg-red-300 p-2 rounded-lg mb-1.5 font-bold text-center">
+                    {% for error in passErrors %}
+                        <li class="text-red-950">{{ error.message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
             {{ form_widget(registrationForm.plainPassword ) }}
         </div>
+
         <div>
             <div>
-                {{ form_errors(registrationForm.agreeTerms) }}
+                {% if checkboxErrors|length %}
+                    <ul class="bg-red-300 p-2 rounded-lg mb-1.5 font-bold text-center">
+                        {% for error in checkboxErrors %}
+                            <li class="text-red-950">{{ error.message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
             <div class="flex h-6 items-center mb-5">
-
                 {{ form_widget(registrationForm.agreeTerms, {
                     'attr': {'class': 'h-6 w-6 me-3 accent-cyan-400'}
                 }) }}
@@ -49,8 +81,6 @@
         </div>
         {{ form_end(registrationForm) }}
     </div>
-
-
 
 
 {% endblock %}

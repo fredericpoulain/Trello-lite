@@ -29,10 +29,16 @@ class Worklab
     #[ORM\OneToMany(targetEntity: Liste::class, mappedBy: 'worklab', orphanRemoval: true)]
     private Collection $listes;
 
+
+//    #[ORM\Column]
+    #[ORM\Column(options: ["default" => "CURRENT_TIMESTAMP"])]
+    private ?\DateTimeImmutable $updatedAt = null;
+
     public function __construct()
     {
         $this->listes = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -102,6 +108,18 @@ class Worklab
                 $liste->setWorklab(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

@@ -1,13 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-.text-red-700{
-    padding: 12px;
-    background-color: #f69b9b;
-    color: #430a0a;
-    border-radius: 8px;
-    margin-bottom: 10px;
-
-
-}

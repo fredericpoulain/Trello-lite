@@ -10,9 +10,7 @@
         {{ encore_entry_link_tags('styles') }}
     {% endblock %}
 
-    {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
-    {% endblock %}
+
 </head>
 <body class="overflow-hidden dark:bg-slate-800 dark:text-white" >
 {% include '_partials/header.html.twig' %}
@@ -30,6 +28,8 @@
 
 
 
-
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
 </body>
 </html>

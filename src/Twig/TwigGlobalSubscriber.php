@@ -30,7 +30,7 @@ readonly class TwigGlobalSubscriber implements EventSubscriberInterface
             //et on injecte son ID dans requête sql pour récupérer ses worklab:
             $worklabList = $this->entityManager->getConnection()
                 ->executeQuery('SELECT worklab.* FROM worklab 
-WHERE worklab.user_id = :userId ', ['userId' => $userId])
+WHERE worklab.user_id = :userId ORDER BY worklab.updated_at DESC', ['userId' => $userId])
                 ->fetchAllAssociative();
         }
 
