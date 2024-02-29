@@ -5,8 +5,7 @@ import {fetchDataFromServer} from "../utils/functions.js";
 import {ButtonAddTask} from "./ButtonAddTask";
 
 
-function Listes({ datas, setListes }) {
-
+function Listes({ datas, setListes, elementListe, setElementListe}) {
     const deleteListe = async (listeID) => {
         console.log('Suppression de la liste avec l\'ID :', listeID);
         //bloc de code à mettre dans une fonction ou un composant
@@ -48,7 +47,7 @@ function Listes({ datas, setListes }) {
                                 className="p-2.5 bg-neutral-600 rounded-lg cursor-grab my-2.5">{task.taskName}</li>
                         ))}
                     </ul>
-                    <ButtonAddTask/>
+                    <ButtonAddTask listeID={liste.listeID} setListes={setListes} elementListe={elementListe} setElementListe={setElementListe}/>
 
                 </div>
             ))}

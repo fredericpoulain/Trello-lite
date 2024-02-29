@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Liste;
+use App\Entity\Task;
 use App\Entity\Worklab;
 use App\Repository\ListeRepository;
 use App\Repository\WorklabRepository;
@@ -93,8 +94,6 @@ class ListeController extends AbstractController
             ]);
         }
         return $this->redirectToRoute('app_home');
-//        }
-//        return $this->redirectToRoute('app_home');
     }
 
     #[Route('/delete', name: 'delete', methods: ['DELETE'])]
@@ -119,9 +118,47 @@ class ListeController extends AbstractController
 
         return $this->json([
             'isSuccessfull' => true,
-//            'res' => $res
         ]);
-//        }
-//        return $this->redirectToRoute('app_home');
+    }
+    #[Route('/task/create', name: 'createTask', methods: ['POST'])]
+    public function createTask(
+        Request                $request,
+        EntityManagerInterface $entityManager,
+        ListeRepository $listeRepository,
+        WorklabRepository $worklabRepository
+    ): Response
+    {
+        $user = $this->getUser();
+        if ($user === null) {
+            return $this->redirectToRoute('app_home');
+        }
+
+        $task = new Task();
+
+        $content = $request->getContent();
+        $data = json_decode($content);
+        $listeID = $data->listeID;
+        $taskName = $data->taskName;
+        $liste = $listeRepository->find($listeID);
+        if ($taskName && $liste) {
+            //il faut changer la date updateDate lié au worklab de la liste liée à la nouvelle tâche
+            $worklab = $worklabRepository->find($liste->getWorklab());
+            $worklab->setUpdatedAt(new \DateTimeImmutable('now'));
+            $entityManager->persist($worklab);
+
+            $task->setName($taskName);
+            $task->setListe($liste);
+            $entityManager->persist($task);
+            $entityManager->flush();
+            //on lui envoie la nouvelle tâche
+            return $this->json([
+                'isSuccessfull' => true,
+                'newTask' => [
+                    'taskID' => $task->getId(),
+                    'taskName' => $task->getName(),
+                ]
+            ]);
+        }
+        return $this->redirectToRoute('app_home');
     }
 }
