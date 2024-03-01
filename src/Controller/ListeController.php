@@ -39,17 +39,20 @@ class ListeController extends AbstractController
         foreach ($listes as $liste) {
             $listeID = $liste->getId();
             $listeName = $liste->getName();
+            $listeSort= $liste->getSort();
             $tasks = $liste->getTasks();
             $taskDetails = [];
             foreach ($tasks as $task) {
                 $taskDetails[] = [
                     'taskID' => $task->getId(),
-                    'taskName' => $task->getName()
+                    'taskName' => $task->getName(),
+                    'taskSort' => $task->getSort()
                 ];
             }
             $arrayListes[] = [
                 'listeID' => $listeID,
                 'listeName' => $listeName,
+                'listeSort' => $listeSort,
                 'listeTasks' => $taskDetails
             ];
         }
@@ -64,10 +67,10 @@ class ListeController extends AbstractController
         ]);
 
     }
-//    #[Route('/create/{id}', name: 'create', methods: ['POST'])]
+
     #[Route('/create', name: 'create', methods: ['POST'])]
     public function create(
-//        Worklab                $worklab,
+
         Request                $request,
         EntityManagerInterface $entityManager,
         WorklabRepository      $worklabRepository): Response
@@ -78,8 +81,7 @@ class ListeController extends AbstractController
         }
 
         $liste = new Liste();
-//        if ($request->isMethod('POST')) {
-//        $listeName = $request->get('listeName');
+
         $content = $request->getContent();
         $data = json_decode($content);
         $worklabID = $data->worklabID;
@@ -131,7 +133,7 @@ class ListeController extends AbstractController
             'isSuccessfull' => true,
         ]);
     }
-    #[Route('/edit', name: 'edit', methods: ['PATCH'])]
+    #[Route('/editName', name: 'edit', methods: ['PATCH'])]
     public function edit(Request $request, EntityManagerInterface $entityManager, ListeRepository $listeRepository): Response
     {
         $user = $this->getUser();
@@ -159,8 +161,12 @@ class ListeController extends AbstractController
             'message' => 'Données manquantes'
         ]);
     }
-    #[Route('/taskEdit', name: 'taskEdit', methods: ['PATCH'])]
-    public function taskEdit(Request $request, EntityManagerInterface $entityManager, TaskRepository $taskRepository): Response
+
+    #[Route('/editSort', name: 'editSort', methods: ['PATCH'])]
+    public function editSort
+    (Request $request,
+     EntityManagerInterface $entityManager,
+     ListeRepository $listeRepository): Response
     {
         $user = $this->getUser();
         if ($user === null) {
@@ -169,17 +175,27 @@ class ListeController extends AbstractController
         $content = $request->getContent();
         $data = json_decode($content);
 
-        $taskID= $data->taskID;
-        $taskName = $data->taskName;
-        $task = $taskRepository->find($taskID);
-        if ($task && $taskName){
-            $task->setName($taskName);
-            $entityManager->persist($task);
+        $draggedListID= $data->draggedListID;
+        $draggedListSort= $data->draggedListSort;
+
+        $targetListID= $data->targetListID;
+        $targetListSort= $data->targetListSort;
+
+        $draggedList = $listeRepository->find($draggedListID);
+        $targetList = $listeRepository->find($targetListID);
+
+
+
+        if ($draggedList && $targetListID){
+            $draggedList->setSort($draggedListSort);
+            $targetList->setSort($targetListSort);
+            $entityManager->persist($draggedList);
+            $entityManager->persist($targetList);
             $entityManager->flush();
 
             return $this->json([
                 'isSuccessfull' => true,
-                'message' => 'edit task OK'
+                'message' => 'Edit sort list OK'
             ]);
         }
         return $this->json([
@@ -187,45 +203,5 @@ class ListeController extends AbstractController
             'message' => 'Données manquantes'
         ]);
     }
-    #[Route('/task/create', name: 'createTask', methods: ['POST'])]
-    public function createTask(
-        Request                $request,
-        EntityManagerInterface $entityManager,
-        ListeRepository $listeRepository,
-        WorklabRepository $worklabRepository
-    ): Response
-    {
-        $user = $this->getUser();
-        if ($user === null) {
-            return $this->redirectToRoute('app_home');
-        }
 
-        $task = new Task();
-
-        $content = $request->getContent();
-        $data = json_decode($content);
-        $listeID = $data->listeID;
-        $taskName = $data->taskName;
-        $liste = $listeRepository->find($listeID);
-        if ($taskName && $liste) {
-            //il faut changer la date updateDate lié au worklab de la liste liée à la nouvelle tâche
-            $worklab = $worklabRepository->find($liste->getWorklab());
-            $worklab->setUpdatedAt(new \DateTimeImmutable('now'));
-            $entityManager->persist($worklab);
-
-            $task->setName($taskName);
-            $task->setListe($liste);
-            $entityManager->persist($task);
-            $entityManager->flush();
-            //on lui envoie la nouvelle tâche
-            return $this->json([
-                'isSuccessfull' => true,
-                'newTask' => [
-                    'taskID' => $task->getId(),
-                    'taskName' => $task->getName(),
-                ]
-            ]);
-        }
-        return $this->redirectToRoute('app_home');
-    }
 }

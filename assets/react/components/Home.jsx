@@ -25,7 +25,7 @@ export function Home({worklab, setWorklab}) {
         return <>
             {loading && 'chargement...!'}
             {/*{!loading && (<div><InputWorklabName worklab={worklab} /></div>)}*/}
-            <Listes datas={listes} listes={listes} setListes={setListes}/>
+            <Listes listes={listes} setListes={setListes}/>
             {!loading && <ButtonAddList idWorklab={idWorklab} setListes={setListes}/>}
             {errors && <div>{errors}</div>}
 

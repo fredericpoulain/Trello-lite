@@ -3,7 +3,7 @@ import {fetchDataFromServer} from "../utils/functions";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPen} from "@fortawesome/free-solid-svg-icons";
 
-export function InputListeName({listeID, listeName}) {
+export function InputListeName({listeID, listeName, initDrag}) {
 
     const [isEditing, setIsEditing] = useState(false);
     const inputRef = useRef(null);
@@ -11,6 +11,7 @@ export function InputListeName({listeID, listeName}) {
     const [prevInputValue, setPrevInputValue] = useState(listeName);
     const handleMouseUp = (e) => {
         setIsEditing(true);
+console.log(e.target.parentNode.removeAttribute('draggable'))
     };
     useEffect(() => {
         if (isEditing && inputRef.current) {
@@ -41,7 +42,7 @@ export function InputListeName({listeID, listeName}) {
                     'listeName': newListeName
                 };
                 console.log(object);
-                const result = await fetchDataFromServer(object, '/liste/edit', 'PATCH');
+                const result = await fetchDataFromServer(object, '/liste/editName', 'PATCH');
 
             } catch (error) {
                 console.log(error)
@@ -71,7 +72,9 @@ export function InputListeName({listeID, listeName}) {
         ) : (
             <>
                 <h2 className="text-lg rounded-lg p-2.5 focus:border-cyan-400 bg-transparent dark:text-white cursor-pointer w-5/6 mb-2 overflow-ellipsis overflow-auto"
-                    onMouseUp={handleMouseUp}>{name}</h2>
+                    onMouseUp={handleMouseUp}
+                    onMouseDown={initDrag}
+                >{name}</h2>
             </>
         )}
     </>

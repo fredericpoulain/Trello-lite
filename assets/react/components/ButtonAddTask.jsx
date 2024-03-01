@@ -35,7 +35,7 @@ export function ButtonAddTask({listeID, setListes, isFormTaskVisible, setFormTas
             };
             try {
                 // Utilisation de la fonction fetchDataFromServer pour communiquer avec le serveur
-                const result = await fetchDataFromServer(object, '/liste/task/create', 'POST');
+                const result = await fetchDataFromServer(object, '/task/create', 'POST');
                 const newTask = result.newTask;
                 //ici il faut modifier le useState de la liste en question parmis toutes les listes, en faisant un push de la tache
                 setListes(prevListes => {

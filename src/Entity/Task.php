@@ -24,6 +24,9 @@ class Task
     #[ORM\JoinColumn(nullable: false)]
     private ?Liste $liste = null;
 
+    #[ORM\Column]
+    private ?int $sort = null;
+
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable();
@@ -67,6 +70,18 @@ class Task
     public function setListe(?Liste $liste): static
     {
         $this->liste = $liste;
+
+        return $this;
+    }
+
+    public function getSort(): ?int
+    {
+        return $this->sort;
+    }
+
+    public function setSort(int $sort): static
+    {
+        $this->sort = $sort;
 
         return $this;
     }
