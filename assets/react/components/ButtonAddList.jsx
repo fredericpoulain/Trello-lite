@@ -17,7 +17,6 @@ export function ButtonAddList({idWorklab, setListes}) {
         }
     }, [isFormVisible]);
     const addList = async (e) => {
-
         e.preventDefault()
         const elListeName = document.querySelector('#listeName');
         const listeName = elListeName.value

@@ -9,23 +9,17 @@
 
 
         <!-- Liste de liens -->
-{#        {{ dump(globalWorklabList) }}#}
-{#        {% if globalWorklabList is not empty %}#}
-{#            {% for worklab in globalWorklabList %}#}
-{#                {{ dump(worklab.name) }}#}
-{#            {% endfor %}#}
 
-{#        {% endif %}#}
-        <ul class="mt-4">
+        <ul class="mt-4" id="ulWorklabAside">
             {% if globalWorklabList is not empty %}
                 {% for worklab in globalWorklabList %}
-                    <li class="flex justify-between items-center block hover:bg-cyan-400 hover:text-black py-2 px-4 rounded-lg transition-colors duration-100">
+                    <li data-idWorklab="{{ worklab.id }}" class="flex justify-between items-center block hover:bg-cyan-400 hover:text-black py-2 px-4 pe-1 rounded-lg transition-colors duration-100">
                         <a href="{{ path('app_worklab_active', {id:worklab.id}) }}"
-                           class="w-5/6 truncate">
+                           class="w-11/12 truncate">
                             {{ worklab.name }}
                         </a>
                         <div class="p-1 hover:text-red-500 cursor-pointer transition-colors duration-100">
-                            <a href="{{ path('app_worklab_delete', {id:worklab.id}) }}" onclick="return confirm('Certain de vouloir supprimer ce worklab ?')">
+                            <a class="p-1.5" href="{{ path('app_worklab_delete', {id:worklab.id}) }}" onclick="return confirm('Certain de vouloir supprimer ce worklab ?')">
                                 <i class="fa-solid fa-trash"></i>
                             </a>
 

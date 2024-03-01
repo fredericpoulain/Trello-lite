@@ -1,11 +1,15 @@
-import React from "react";
+import React, {useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faXmark} from "@fortawesome/free-solid-svg-icons";
+import {faPen, faXmark} from "@fortawesome/free-solid-svg-icons";
 import {fetchDataFromServer} from "../utils/functions.js";
 import {ButtonAddTask} from "./ButtonAddTask";
+import {InputListeName} from "./InputListeName";
+import {Task} from "./Task";
 
 
-function Listes({ datas, setListes, elementListe, setElementListe}) {
+function Listes({ datas, setListes}) {
+    const [visibleFormListeID, setVisibleFormListeID] = useState(null);
+
     const deleteListe = async (listeID) => {
         console.log('Suppression de la liste avec l\'ID :', listeID);
         //bloc de code à mettre dans une fonction ou un composant
@@ -30,6 +34,7 @@ function Listes({ datas, setListes, elementListe, setElementListe}) {
             deleteListe(listeID);
         }
     }
+
     return (
         <>
             {datas && datas.map(liste => (
@@ -39,16 +44,19 @@ function Listes({ datas, setListes, elementListe, setElementListe}) {
                             onClick={() => handleDeleteConfirmation(liste.listeID)}>
                         <FontAwesomeIcon icon={faXmark}/>
                     </button>
-
-                    <h2 className="text-2xl my-2 p-3">{liste.listeName}</h2>
+                    <InputListeName listeID={liste.listeID} listeName={liste.listeName} />
+                    {/*<h2 className="text-2xl my-2 p-3">{liste.listeName}</h2>*/}
                     <ul>
+
                         {liste.listeTasks.map(task => (
-                            <li key={task.taskID}
-                                className="p-2.5 bg-neutral-600 rounded-lg cursor-grab my-2.5">{task.taskName}</li>
+                            <Task key={`task-${task.taskID}`}  taskID={task.taskID} taskName={task.taskName} />
                         ))}
                     </ul>
-                    <ButtonAddTask listeID={liste.listeID} setListes={setListes} elementListe={elementListe} setElementListe={setElementListe}/>
-
+                    <ButtonAddTask
+                        listeID={liste.listeID}
+                        setListes={setListes}
+                        isFormTaskVisible={liste.listeID === visibleFormListeID}
+                        setFormTaskVisible={setVisibleFormListeID}/>
                 </div>
             ))}
 

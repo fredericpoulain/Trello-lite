@@ -4,24 +4,23 @@ import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 import {fetchDataFromServer} from "../utils/functions";
 import liste from "./Liste";
 
-export function ButtonAddTask({listeID, setListes, elementListe, setElementListe}) {
-    const [isFormTaskVisible, setFormTaskVisible] = useState(false);
-    const [elInput, setElInput] = useState(null);
-    const toggleFormTaskVisibility = (e) => {
-        setFormTaskVisible(!isFormTaskVisible);
+export function ButtonAddTask({listeID, setListes, isFormTaskVisible, setFormTaskVisible }) {
+    // const [isFormTaskVisible, setFormTaskVisible] = useState(false);
 
-        // if (!isFormTaskVisible){
-        //     const element = e.target.nextElementSibling.firstElementChild;
-        //     setElInput(element);
-        // }else{
-        //     setElInput(null);
-        // }
+    const toggleFormTaskVisibility = (e) => {
+        if (isFormTaskVisible) {
+            setFormTaskVisible(null); // Fermer le formulaire
+        } else {
+            setFormTaskVisible(listeID); // Ouvrir le formulaire
+        }
     };
-    // useEffect(() => {
-    //     if (isFormTaskVisible) {
-    //         elInput.focus();
-    //     }
-    // }, [isFormTaskVisible]);
+    useEffect(() => {
+        if (isFormTaskVisible) {
+            const elInput = document.querySelector(`#taskName-${listeID}`); // vous sélectionnez l'élément input correspondant à l'id de la liste
+            elInput.focus();
+        }
+    }, [isFormTaskVisible, listeID]); // vous ajoutez listeID comme dépendance de useEffect
+
     const addTask = async (e) => {
         e.preventDefault()
 
@@ -40,19 +39,18 @@ export function ButtonAddTask({listeID, setListes, elementListe, setElementListe
                 const newTask = result.newTask;
                 //ici il faut modifier le useState de la liste en question parmis toutes les listes, en faisant un push de la tache
                 setListes(prevListes => {
-                    const updatedListe = [...prevListes];
-                    let listeModify = updatedListe.find(liste => liste.listeID === listeID);
-                    if (listeModify) {
-                        listeModify.listeTasks.push({
-                            "taskID": newTask.taskID,
-                            "taskName": newTask.taskName
-                        });
-                        return updatedListe
-                    }
-
+                    return prevListes.map(liste => {
+                        if (liste.listeID === listeID) {
+                            return {
+                                ...liste,
+                                listeTasks: [...liste.listeTasks, newTask]
+                            };
+                        }
+                        return liste;
+                    });
                 });
                 elInputTaskName.value = '';
-                toggleFormTaskVisibility();
+                elInputTaskName.focus()
 
             } catch (error) {
                 console.log(error)
@@ -72,7 +70,7 @@ export function ButtonAddTask({listeID, setListes, elementListe, setElementListe
                 <FontAwesomeIcon icon={faPlus}/> <span className="ms-1">Ajouter une tâche</span>
             </button>
             <form className={`h-fit rounded-lg w-full ${isFormTaskVisible ? '' : 'hidden'}`} method="POST" >
-                <input id="taskName" className="p-3 w-full rounded-lg bg-slate-800 border-2 border-cyan-600 outline-0" name="taskName" placeholder="Entrez le nom de la tâche…"/>
+                <input id={`taskName-${listeID}`} className="p-3 w-full rounded-lg bg-slate-800 border-2 border-cyan-600 outline-0" name="taskName" placeholder="Entrez le nom de la tâche…"/>
                 <div className="flex justify-between mt-2">
                     <button type="submit"
                             className=" bg-cyan-600 hover:bg-cyan-400 rounded-lg p-3 transition-colors duration-200 text-white hover:text-black"

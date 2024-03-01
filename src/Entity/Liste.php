@@ -29,6 +29,9 @@ class Liste
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'liste', orphanRemoval: true)]
     private Collection $tasks;
 
+    #[ORM\Column]
+    private ?int $sort = null;
+
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
@@ -103,6 +106,18 @@ class Liste
                 $task->setListe(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSort(): ?int
+    {
+        return $this->sort;
+    }
+
+    public function setSort(int $sort): static
+    {
+        $this->sort = $sort;
 
         return $this;
     }

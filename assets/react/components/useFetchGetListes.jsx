@@ -1,8 +1,9 @@
 import {useEffect, useState} from "react";
 
-export function useFetchGetListes(listes, setListes, url, options = {}) {
+export function useFetchGetListes(worklab, setWorklab, listes, setListes, url, options = {}) {
     const [loading, setLoading] = useState(true)
     const [errors, setErrors] = useState(null)
+
 // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         const fetchData = async () => {
@@ -14,6 +15,7 @@ export function useFetchGetListes(listes, setListes, url, options = {}) {
                 if (!response.ok) throw new Error(`Une erreur est survenue: ${response.status}`);
                 const data = await response.json();
                 setListes(data.listes)
+                setWorklab(data.infoWorklab)
             } catch (error) {
                 setErrors(error.message)
             } finally {

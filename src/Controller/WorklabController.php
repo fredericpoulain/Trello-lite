@@ -50,6 +50,35 @@ class WorklabController extends AbstractController
         $this->addFlash('error', 'Le formulaire n\'est pas valide.');
         return $this->redirectToRoute('app_home');
     }
+    #[Route('/edit', name: 'edit', methods: ['PATCH'])]
+    public function edit(Request $request, EntityManagerInterface $entityManager, WorklabRepository $worklabRepository): Response
+    {
+        $user = $this->getUser();
+        if ($user === null) {
+            return $this->redirectToRoute('app_home');
+        }
+        $content = $request->getContent();
+        $data = json_decode($content);
+
+        $worklabID= $data->worklabID;
+        $worklabName = $data->worklabName;
+        $worklab = $worklabRepository->find($worklabID);
+        if ($worklab && $worklabName){
+            $worklab->setName($worklabName);
+            $entityManager->persist($worklab);
+            $entityManager->flush();
+
+            return $this->json([
+                'isSuccessfull' => true,
+                'message' => 'edit worklab OK'
+            ]);
+        }
+        return $this->json([
+            'isSuccessfull' => false,
+            'message' => 'Données manquantes'
+        ]);
+
+    }
 
     #[Route('/delete/{id}', name: 'delete')]
     public function delete(
