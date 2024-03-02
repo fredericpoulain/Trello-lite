@@ -10,7 +10,8 @@ import {Task} from "./Task";
 function Listes({ listes, setListes}) {
     const [visibleFormListeID, setVisibleFormListeID] = useState(null);
     const [initDraggableListe, setInitDraggableListe] = useState(false);
-console.log(listes)
+    const [tempTask, setTempTask] = useState(null);
+// console.log(listes)
     const deleteListe = async (listeID) => {
         console.log('Suppression de la liste avec l\'ID :', listeID);
         //bloc de code à mettre dans une fonction ou un composant
@@ -51,8 +52,20 @@ console.log(listes)
     const handleDragOverListe = (e) => {
         e.preventDefault()
         const elementSurvole = e.currentTarget.getAttribute('data-listeid');
-        console.log('ID Liste : '+elementSurvole)
+        console.log('ID Liste : '+ elementSurvole)
 
+        //j'ai crée un useSate tempTask/setTemptask que j'ai donné au composant Task pour qu'il le stock
+        //je le récupère ici avec tempTask.
+        //dans cette fonction lors d'un dragover, le récupère le UL et je vérifie s'il est vide,
+        // si c'est le cas je mets dans le DOM le tempTask pour créer une zone de dépot valide que le composant Task va capter.
+        const elUL = e.currentTarget.querySelector("ul")
+        if (elUL.childElementCount === 0) {
+            console.log("La liste est vide.");
+            const elLi = tempTask;
+            elUL.append(elLi)
+            // setTempTask(null)
+            // console.log(tempTask)
+        }
     }
     const handleDropListe = async (e, targetListID, targetListSort) => {
         console.log('handleDropListe')
@@ -96,6 +109,12 @@ console.log(listes)
         e.target.removeAttribute('draggable')
         setInitDraggableListe(false)
     }
+    const handleDragEnterCapture = (e) => {
+        // console.log(e.currentTarget)
+
+    }
+
+
 
 
 
@@ -109,7 +128,9 @@ console.log(listes)
                          data-listeid={liste.listeID}
                          data-listesort={liste.listeSort}
                          onDragStart={initDraggableListe ? ((e) => handleDragStartListe(e, liste.listeID, liste.listeSort)) : null}
-                         onDragOver={initDraggableListe ? handleDragOverListe : null}
+                         // onDragOver={initDraggableListe ? handleDragOverListe : null}
+                         onDragOver={handleDragOverListe}
+                         onDragEnterCapture={handleDragEnterCapture}
                          onDrop={initDraggableListe ? ((e) => handleDropListe(e, liste.listeID, liste.listeSort)) : null}
                          onDragEnd={initDraggableListe ? handleDragEnd : null}
                          className="w-64 bg-neutral-900 mx-3 p-3 rounded-lg text-neutral-300 h-fit relative">
@@ -131,9 +152,13 @@ console.log(listes)
                                         listeID = {liste.listeID}
                                         listes={listes}
                                         setListes={setListes}
+                                        temptTask={tempTask}
+                                        setTempTask={setTempTask}
+
                                     />
                                 ))}
                         </ul>
+
                         <ButtonAddTask
                             listeID={liste.listeID}
                             setListes={setListes}
