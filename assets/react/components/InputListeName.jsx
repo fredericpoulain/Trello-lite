@@ -3,16 +3,14 @@ import {fetchDataFromServer} from "../utils/functions";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPen} from "@fortawesome/free-solid-svg-icons";
 
-export function InputListeName({listeID, listeName, initDrag}) {
+//initDrag en paramètre ?????????????????????
+export function InputListeName({listeID, listeName, initDragListe}) {
 
     const [isEditing, setIsEditing] = useState(false);
     const inputRef = useRef(null);
     const [name, setName] = useState(listeName)
     const [prevInputValue, setPrevInputValue] = useState(listeName);
-    const handleMouseUp = (e) => {
-        setIsEditing(true);
-console.log(e.target.parentNode.removeAttribute('draggable'))
-    };
+
     useEffect(() => {
         if (isEditing && inputRef.current) {
             inputRef.current.focus(); // Mise du focus sur l'élément <input>
@@ -24,6 +22,9 @@ console.log(e.target.parentNode.removeAttribute('draggable'))
             handleSubmit(e);
             e.target.blur()
         }
+    }
+    const handleMouseUpEditListe = () => {
+        setIsEditing(true);
     }
     const handleSubmit = async (e) => {
         let newListeName = e.target.value.trim();
@@ -71,9 +72,9 @@ console.log(e.target.parentNode.removeAttribute('draggable'))
     />
         ) : (
             <>
-                <h2 className="text-lg rounded-lg p-2.5 focus:border-cyan-400 bg-transparent dark:text-white cursor-pointer w-5/6 mb-2 overflow-ellipsis overflow-auto"
-                    onMouseUp={handleMouseUp}
-                    onMouseDown={initDrag}
+                <h2 className="text-lg rounded-lg p-2.5 focus:border-cyan-400 bg-transparent dark:text-white cursor-pointer w-5/6 mb-2 overflow-ellipsis overflow auto overflow-y-clip transition duration-200"
+                    onMouseUp={handleMouseUpEditListe}
+                    onMouseDown={initDragListe}
                 >{name}</h2>
             </>
         )}

@@ -9,6 +9,7 @@ use App\Repository\ListeRepository;
 use App\Repository\TaskRepository;
 use App\Repository\WorklabRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,8 +40,14 @@ class ListeController extends AbstractController
         foreach ($listes as $liste) {
             $listeID = $liste->getId();
             $listeName = $liste->getName();
-            $listeSort= $liste->getSort();
-            $tasks = $liste->getTasks();
+            $listeSort = $liste->getSort();
+            $tasks = $liste->getTasks()->toArray(); // Convertir en tableau
+
+            // Triez les tâches en fonction de taskSort
+            usort($tasks, function ($a, $b) {
+                return $a->getSort() - $b->getSort();
+            });
+
             $taskDetails = [];
             foreach ($tasks as $task) {
                 $taskDetails[] = [
@@ -49,6 +56,7 @@ class ListeController extends AbstractController
                     'taskSort' => $task->getSort()
                 ];
             }
+
             $arrayListes[] = [
                 'listeID' => $listeID,
                 'listeName' => $listeName,
@@ -162,8 +170,8 @@ class ListeController extends AbstractController
         ]);
     }
 
-    #[Route('/editSort', name: 'editSort', methods: ['PATCH'])]
-    public function editSort
+    #[Route('/dragAndDrop', name: 'dragAndDrop', methods: ['PATCH'])]
+    public function dragAndDrop
     (Request $request,
      EntityManagerInterface $entityManager,
      ListeRepository $listeRepository): Response
@@ -173,35 +181,31 @@ class ListeController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
         $content = $request->getContent();
-        $data = json_decode($content);
-
-        $draggedListID= $data->draggedListID;
-        $draggedListSort= $data->draggedListSort;
-
-        $targetListID= $data->targetListID;
-        $targetListSort= $data->targetListSort;
-
-        $draggedList = $listeRepository->find($draggedListID);
-        $targetList = $listeRepository->find($targetListID);
-
-
-
-        if ($draggedList && $targetListID){
-            $draggedList->setSort($draggedListSort);
-            $targetList->setSort($targetListSort);
-            $entityManager->persist($draggedList);
-            $entityManager->persist($targetList);
+        $listes = json_decode($content);
+//        dd($listes);
+        try {
+            foreach ($listes as $liste) {
+                $listeBDD = $listeRepository->find($liste->listeID);
+                // Vérifiez si la tâche existe
+                if (!$listeBDD) {
+                    throw new Exception("Liste non trouvée avec l'ID $liste->listeID");
+                }
+                $listeBDD->setSort($liste->listeSort);
+                $entityManager->persist($listeBDD);
+            }
             $entityManager->flush();
 
             return $this->json([
                 'isSuccessfull' => true,
-                'message' => 'Edit sort list OK'
+                'message' => 'DragAndDrop Liste OK'
+            ]);
+        } catch (\Exception $exception) {
+            // Gérer l'exception et retourner une réponse JSON avec un message d'erreur
+            return $this->json([
+                'isSuccessfull' => false,
+                'message' => 'Erreur lors de la mise à jour des listes lors du DragAndDrop: ' . $exception->getMessage()
             ]);
         }
-        return $this->json([
-            'isSuccessfull' => false,
-            'message' => 'Données manquantes'
-        ]);
     }
 
 }

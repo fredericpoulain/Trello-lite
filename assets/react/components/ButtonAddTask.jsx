@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 import {fetchDataFromServer} from "../utils/functions";
-import liste from "./Liste";
+import liste from "./Listes";
 
 export function ButtonAddTask({listeID, setListes, isFormTaskVisible, setFormTaskVisible }) {
     // const [isFormTaskVisible, setFormTaskVisible] = useState(false);
@@ -29,6 +29,7 @@ export function ButtonAddTask({listeID, setListes, isFormTaskVisible, setFormTas
         const elInputValue = elInputTaskName.value
         // console.log(inputTaskName.value)
         if (elInputValue){
+            // const nombreElementsLi = document.querySelector(`div[data-listeid="${listeID}"]`).length;
             const object = {
                 'listeID': listeID,
                 'taskName': elInputValue

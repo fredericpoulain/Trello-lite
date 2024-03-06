@@ -7,6 +7,7 @@ use App\Repository\ListeRepository;
 use App\Repository\TaskRepository;
 use App\Repository\WorklabRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,8 +20,8 @@ class TaskController extends AbstractController
     public function create(
         Request                $request,
         EntityManagerInterface $entityManager,
-        ListeRepository $listeRepository,
-        WorklabRepository $worklabRepository
+        ListeRepository        $listeRepository,
+        WorklabRepository      $worklabRepository
     ): Response
     {
         $user = $this->getUser();
@@ -44,7 +45,7 @@ class TaskController extends AbstractController
 
             $task->setName($taskName);
             $task->setListe($liste);
-            $task->setSort($numberOfTask +1);
+            $task->setSort($numberOfTask + 1);
             $entityManager->persist($task);
             $entityManager->flush();
             //on lui envoie la nouvelle tâche
@@ -53,6 +54,7 @@ class TaskController extends AbstractController
                 'newTask' => [
                     'taskID' => $task->getId(),
                     'taskName' => $task->getName(),
+                    'taskSort' => $task->getSort()
                 ]
             ]);
         }
@@ -69,10 +71,10 @@ class TaskController extends AbstractController
         $content = $request->getContent();
         $data = json_decode($content);
 
-        $taskID= $data->taskID;
+        $taskID = $data->taskID;
         $taskName = $data->taskName;
         $task = $taskRepository->find($taskID);
-        if ($task && $taskName){
+        if ($task && $taskName) {
             $task->setName($taskName);
             $entityManager->persist($task);
             $entityManager->flush();
@@ -88,12 +90,15 @@ class TaskController extends AbstractController
         ]);
     }
 
-    #[Route('/editSort', name: 'editSort', methods: ['PATCH'])]
-    public function editSort(
-        Request $request,
+    /**
+     * @throws Exception
+     */
+    #[Route('/dragAndDrop', name: 'dragAndDrop', methods: ['PATCH'])]
+    public function dragAndDrop(
+        Request                $request,
         EntityManagerInterface $entityManager,
-        TaskRepository $taskRepository,
-        ListeRepository $listeRepository
+        TaskRepository         $taskRepository,
+        ListeRepository        $listeRepository
     ): Response
     {
         $user = $this->getUser();
@@ -102,45 +107,35 @@ class TaskController extends AbstractController
         }
         $content = $request->getContent();
         $data = json_decode($content);
-        //element dragged
-        $draggedTaskID = $data->draggedTaskID;
-        $draggedTaskSort = $data->draggedTaskSort;
-        $draggedListeID= $data->draggedListeID;
-
-        //element target
-        $targetTaskID = $data->targetTaskID;
-        $targetTaskSort = $data->targetTaskSort;
-        $targetListeID= $data->targetListeID;
-
-        $draggedTask = $taskRepository->find($draggedTaskID);
-        $targetTask = $taskRepository->find($targetTaskID);
-
-        //vérifier aussi si $targetListeID renvoie un object ?
-        $draggedList = $listeRepository->find($draggedListeID);
-        $targetList= $listeRepository->find($targetListeID);
-
-        if ($draggedTask && $targetTask && $draggedList && $targetList){
-
-            $draggedTask->setSort($draggedTaskSort);
-            $draggedTask->setListe($draggedList);
-
-            $targetTask->setSort($targetTaskSort);
-            $targetTask->setListe($targetList);
-
-            $entityManager->persist($draggedTask);
-            $entityManager->persist($targetTask);
-
+        try {
+            foreach ($data as $task) {
+                $taskBDD = $taskRepository->find($task->taskID);
+                $listeBDD = $listeRepository->find($task->listeID);
+                // Vérifiez si la tâche existe
+                if (!$taskBDD) {
+                    throw new Exception("Tâche non trouvée avec l'ID $task->taskID");
+                }
+                if (!$listeBDD) {
+                    throw new Exception("Liste non trouvée avec l'ID $task->listeID");
+                }
+                $taskBDD->setSort($task->taskSort);
+                $taskBDD->setListe($listeBDD);
+                $entityManager->persist($taskBDD);
+            }
             $entityManager->flush();
 
             return $this->json([
                 'isSuccessfull' => true,
-                'message' => 'Edit sort task OK'
+                'message' => 'DragAndDrop task OK'
+            ]);
+        } catch (\Exception $exception) {
+            // Gérer l'exception et retourner une réponse JSON avec un message d'erreur
+            return $this->json([
+                'isSuccessfull' => false,
+                'message' => 'Erreur lors de la mise à jour des tâches lors du DragAndDrop: ' . $exception->getMessage()
             ]);
         }
-        return $this->json([
-            'isSuccessfull' => false,
-            'message' => 'Données manquantes'
-        ]);
+
     }
 
 }
