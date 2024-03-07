@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {fetchDataFromServer} from "../utils/functions";
 
 export function InputWorklabName({id, name}) {
@@ -7,16 +7,12 @@ export function InputWorklabName({id, name}) {
     const [prevInputValue, setPrevInputValue] = useState("");
     useEffect(() => {
         if (name) {
-            // console.log(name)
             setTitle(name)
             setPrevInputValue(name)
-
         }
     }, [name])
     useEffect(() => {
-        if (id) {
-            setIdWorklab(id)
-        }
+        if (id) setIdWorklab(id)
     }, [id])
 
 
@@ -26,13 +22,11 @@ export function InputWorklabName({id, name}) {
         if (newWorklabName !== prevInputValue){
             setTitle(newWorklabName)
             setPrevInputValue(newWorklabName)
-            console.log('valeur changée')
             try {
                 const object = {
                     'worklabID': idWorklab,
                     'worklabName': newWorklabName
                 };
-                console.log(object);
 
                 // Utilisation de la fonction fetchDataFromServer pour communiquer avec le serveur
                 const result = await fetchDataFromServer(object, '/worklab/edit', 'PATCH');

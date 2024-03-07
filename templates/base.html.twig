@@ -12,9 +12,9 @@
 
 
 </head>
-<body class="overflow-y-hidden dark:bg-slate-800 dark:text-white" >
+<body class="h-full overflow-hidden dark:bg-slate-800 dark:text-white" >
 {% include '_partials/header.html.twig' %}
-<div class="flex h-screen">
+<div class="flex h-full">
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
     {% include '_partials/aside.html.twig' %}
     {% endif %}

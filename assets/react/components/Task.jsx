@@ -15,9 +15,7 @@ export function Task({keyValue, taskName, taskID, taskSort, listeID, index}) {
     };
 
     const handleChange = (e) => {
-        console.log('le nom de la tâche change')
         setName(e.target.value)
-        console.log(name)
     }
     useEffect(() => {
         if (isEditing && inputRef.current) {
@@ -25,34 +23,28 @@ export function Task({keyValue, taskName, taskID, taskSort, listeID, index}) {
         }
     }, [isEditing]);
 
+
+    //valide le nouveau nom de la tâche sur touche "Enter"
     const handleKeyPress = (e) => {
         if (e.key === "Enter") {
-            console.log(e.target)
             handleSubmit(e);
             e.target.blur()
         }
     }
 
-    //si modification faudrait peut etre mettre a jour le useState non ?????????????????????????????????????????
+    //Change le nom de la task
     const handleSubmit = async (e) => {
         let newTaskName = e.target.value.trim();
-        if (newTaskName === prevName) {
-            console.log('pareil')
-        } else {
-            console.log('différente')
-        }
-        //
+
         if (newTaskName !== prevName) {
-            //     setTitle(newWorklabName)
             setPrevName(newTaskName)
             try {
                 const object = {
                     'taskID': taskID,
                     'taskName': newTaskName
                 };
-                console.log(object);
                 const result = await fetchDataFromServer(object, '/task/editName', 'PATCH');
-
+                console.log(result.message)
             } catch (error) {
                 console.log(error)
             }
@@ -63,7 +55,7 @@ export function Task({keyValue, taskName, taskID, taskSort, listeID, index}) {
 
     return <>
         <Draggable draggableId={taskID.toString()} index={index}>
-            {provider => (
+            {(provider, snapshot)=> (
                 <li {...provider.draggableProps}
                     {...provider.dragHandleProps}
                     ref={provider.innerRef}
@@ -71,7 +63,7 @@ export function Task({keyValue, taskName, taskID, taskSort, listeID, index}) {
                     data-taskid={taskID}
                     data-tasksort={taskSort}
                     data-listeid={listeID}
-                    className="h-11 bg-neutral-700 rounded-lg cursor-grab my-2.5 flex justify-between items-center truncate w-full"
+                    className={`h-11 rounded-lg cursor-grab my-2.5 flex justify-between items-center truncate w-full ${snapshot.isDragging ? 'bg-cyan-400 text-black' : 'bg-neutral-700'}`}
                 >
                     {isEditing ? (
                         <input
