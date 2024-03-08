@@ -9,9 +9,13 @@ export function Task({keyValue, taskName, taskID, taskSort, listeID, index}) {
     const [isEditing, setIsEditing] = useState(false);
     const [name, setName] = useState(taskName)
     const [prevName, setPrevName] = useState(taskName)
+    const [heightTextarea, setHeightTextarea] = useState(null)
     const inputRef = useRef(null);
     const handleEditClick = (e) => {
         setIsEditing(true);
+        const heightParent = e.currentTarget.parentNode.clientHeight
+        setHeightTextarea(heightParent * 1.20)
+        // 108 -> 128px
     };
 
     const handleChange = (e) => {
@@ -55,7 +59,7 @@ export function Task({keyValue, taskName, taskID, taskSort, listeID, index}) {
 
     return <>
         <Draggable draggableId={taskID.toString()} index={index}>
-            {(provider, snapshot)=> (
+            {(provider, snapshot) => (
                 <li {...provider.draggableProps}
                     {...provider.dragHandleProps}
                     ref={provider.innerRef}
@@ -63,12 +67,14 @@ export function Task({keyValue, taskName, taskID, taskSort, listeID, index}) {
                     data-taskid={taskID}
                     data-tasksort={taskSort}
                     data-listeid={listeID}
-                    className={`h-11 rounded-lg cursor-grab my-2.5 flex justify-between items-center truncate w-full ${snapshot.isDragging ? 'bg-cyan-400 text-black' : 'bg-neutral-700'}`}
+                    className={`rounded-lg cursor-grab my-2.5 flex justify-between items-center w-full ${snapshot.isDragging ? 'bg-cyan-400 text-black' : 'bg-neutral-700'}`}
+
                 >
                     {isEditing ? (
-                        <input
+                        <textarea
                             ref={inputRef}
-                            className="text-lg p-1.5 w-full rounded-lg outline-none focus:border-2 focus:border-cyan-400 bg-transparent dark:text-white w-5/6 "
+                            className="text-lg p-2.5 w-full rounded-lg outline-none focus:border-2 focus:border-cyan-400 bg-transparent dark:text-white w-5/6 overflow-hidden break-words overflow-y-hidden"
+                            style={{height: heightTextarea || 'auto'}}
                             value={name}
                             // On ajoute les événements "onKeyPress" et "onBlur" à l'input
                             onBlur={handleSubmit}
@@ -77,14 +83,16 @@ export function Task({keyValue, taskName, taskID, taskSort, listeID, index}) {
                         />
                     ) : (
                         <>
-                            <span className="p-1.5 w-5/6 truncate overflow-ellipsis">{name}</span>
+                            <span className="p-1.5 w-5/6 break-words">{name}</span>
                             <span
                                 className=" w-5 h-5 p-5 me-1 hover:bg-neutral-500 rounded-full flex justify-center items-center cursor-pointer"
                                 onClick={handleEditClick}
                             >
-                <FontAwesomeIcon icon={faPen}/>
-            </span>
+                                <FontAwesomeIcon icon={faPen}/>
+                            </span>
+
                         </>
+
                     )}
                 </li>
             )}

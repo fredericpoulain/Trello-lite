@@ -50,7 +50,8 @@ class RegistrationFormType extends AbstractType
                 'label_attr' => ['class' => 'mb-3 block'],
                 'attr' => [
                     'class' => 'border text-lg rounded-lg block p-2.5 focus:border-cyan-400 focus:outline-none bg-transparent dark:text-white mb-8 w-full',
-                    'placeholder' => "Votre nom d'utilisateur"
+                    'placeholder' => "Votre nom d'utilisateur",
+                    'autocomplete' => 'userName',
                 ],
                 'constraints' => [
                     new NotBlank([
