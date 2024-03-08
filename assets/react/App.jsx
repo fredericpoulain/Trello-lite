@@ -8,13 +8,17 @@ function App() {
 
     return <>
         <InputWorklabName id={worklab?.worklabID} name={worklab?.worklabName}/>
+        {/*overflow-hidden*/}
 
-        <div className="flex mainContainer overflow-hidden w-full">
-            <Home
-                worklab={worklab}
-                setWorklab={setWorklab}
-            />
-        </div>
+            <div className="flex mainContainer">
+
+                <Home
+                    worklab={worklab}
+                    setWorklab={setWorklab}
+                />
+            </div>
+
+
     </>
 
 }

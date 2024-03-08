@@ -23,12 +23,19 @@
 .scrollbar::-webkit-scrollbar-thumb:hover {
     background: #464646;
 }
+.main{
 
+}
 .mainContainer{
-    height: 78%;
+    height: 80%;
+    width: auto;
+    overflow-y: hidden;
+    overflow-x: auto;
+
 }
 .liste{
     height: 100%;
+    /*min-width: 100%;*/
 
 }
 .headerListe{

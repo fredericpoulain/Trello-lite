@@ -65,8 +65,7 @@ export function ButtonAddTask({listeID, setListes, isFormTaskVisible, setFormTas
             </div>
             <form className={`h-fit rounded-lg w-full ${isFormTaskVisible ? '' : 'hidden'}`} method="POST">
                 <textarea id={`taskName-${listeID}`}
-                          className="text-lg p-2.5 w-full rounded-lg outline-none focus:border-2 focus:border-cyan-400 bg-transparent dark:text-white w-5/6 min-h-20 overflow-hidden break-words overflow-y-hidden"
-                          name="taskName"
+                       className="p-3 w-full rounded-lg bg-slate-800 border-2 border-cyan-600 outline-0" name="taskName"
                        placeholder="Entrez le nom de la tâche…"/>
                 <div className="flex justify-between mt-2">
                     <button type="submit"

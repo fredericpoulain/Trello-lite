@@ -17,7 +17,7 @@ class WorklabType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Ajouter un worklab',
+                'label' => 'Ajouter un espace de travail',
                 'label_attr' => ['class' => 'mb-3 block font-bold'],
                 'attr' => [
                     'class' => 'border text-lg rounded-lg block p-2.5 focus:border-cyan-400 focus:outline-none bg-transparent dark:text-white mb-2 w-full',
