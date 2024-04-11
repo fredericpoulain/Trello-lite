@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {fetchDataFromServer} from "../utils/functions";
+import {fetchDataFromServer} from "../../utils/functions";
 
 
 export function InputListeName({listeID, listeName}) {

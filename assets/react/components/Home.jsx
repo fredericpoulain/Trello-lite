@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 
 import {useFetchGetListes} from "./useFetchGetListes";
-import {ButtonAddList} from "./ButtonAddList";
+import {ButtonAddList} from "./Buttons/ButtonAddList";
 import Listes from "./Listes";
 import {fetchDataFromServer} from "../utils/functions";
 
@@ -60,9 +60,9 @@ export function Home({worklab, setWorklab}) {
             const modifiedTasks = [];
 
             // Index de la liste source
-            const sourceListeIndex = updatedListes.findIndex(liste => liste.listeID == source.droppableId);
+            const sourceListeIndex = updatedListes.findIndex(liste => liste.listeID === source.droppableId);
             // Index de la liste destination
-            const destinationListeIndex = updatedListes.findIndex(liste => liste.listeID == destination.droppableId);
+            const destinationListeIndex = updatedListes.findIndex(liste => liste.listeID === destination.droppableId);
 
             // Si le déplacement est au sein de la même liste
             if (source.droppableId === destination.droppableId) {

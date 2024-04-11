@@ -2,8 +2,8 @@ import React, {useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPen, faXmark} from "@fortawesome/free-solid-svg-icons";
 import {fetchDataFromServer} from "../utils/functions.js";
-import {ButtonAddTask} from "./ButtonAddTask";
-import {InputListeName} from "./InputListeName";
+import {ButtonAddTask} from "./Buttons/ButtonAddTask";
+import {InputListeName} from "./Inputs/InputListeName";
 import {Task} from "./Task";
 import {DragDropContext, Droppable} from "@hello-pangea/dnd";
 

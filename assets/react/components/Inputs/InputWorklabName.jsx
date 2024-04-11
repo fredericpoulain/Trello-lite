@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {fetchDataFromServer} from "../utils/functions";
+import {fetchDataFromServer} from "../../utils/functions";
 
 export function InputWorklabName({id, name}) {
     const [title, setTitle] = useState("")
