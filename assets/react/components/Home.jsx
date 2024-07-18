@@ -60,9 +60,11 @@ export function Home({worklab, setWorklab}) {
             const modifiedTasks = [];
 
             // Index de la liste source
-            const sourceListeIndex = updatedListes.findIndex(liste => liste.listeID === source.droppableId);
+            // +source.droppableId OU  parseInt(source.droppableId)
+            const sourceListeIndex = updatedListes.findIndex(liste => liste.listeID === +source.droppableId);
+            console.log(sourceListeIndex);
             // Index de la liste destination
-            const destinationListeIndex = updatedListes.findIndex(liste => liste.listeID === destination.droppableId);
+            const destinationListeIndex = updatedListes.findIndex(liste => liste.listeID === +destination.droppableId);
 
             // Si le déplacement est au sein de la même liste
             if (source.droppableId === destination.droppableId) {
