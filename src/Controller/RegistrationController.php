@@ -18,6 +18,16 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class RegistrationController extends AbstractController
 {
+    /**
+     * @param Request $request
+     * @param UserPasswordHasherInterface $userPasswordHasher
+     * @param UserAuthenticatorInterface $userAuthenticator
+     * @param UserAuthenticator $authenticator
+     * @param EntityManagerInterface $entityManager
+     * @param MailerInterface $mailer
+     * @return Response
+     * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
+     */
     #[Route('/enregistrement', name: 'app_register')]
     public function register(
         Request                     $request,

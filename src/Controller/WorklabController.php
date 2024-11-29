@@ -14,6 +14,9 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/worklab', name: 'app_worklab_')]
 class WorklabController extends AbstractController
 {
+    /**
+     * @return Response
+     */
     #[Route('/form', name: 'form')]
     public function displayForm(): Response
     {
@@ -25,6 +28,11 @@ class WorklabController extends AbstractController
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[Route('/create', name: 'create')]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -50,6 +58,13 @@ class WorklabController extends AbstractController
         $this->addFlash('error', 'Le formulaire n\'est pas valide.');
         return $this->redirectToRoute('app_home');
     }
+
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param WorklabRepository $worklabRepository
+     * @return Response
+     */
     #[Route('/edit', name: 'edit', methods: ['PATCH'])]
     public function edit(Request $request, EntityManagerInterface $entityManager, WorklabRepository $worklabRepository): Response
     {
@@ -80,6 +95,11 @@ class WorklabController extends AbstractController
 
     }
 
+    /**
+     * @param Worklab $worklab
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[Route('/delete/{id}', name: 'delete')]
     public function delete(
         Worklab                $worklab,
@@ -96,6 +116,11 @@ class WorklabController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
+    /**
+     * @param Worklab $worklab
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[Route('/active/{id}', name: 'active')]
     public function active(Worklab $worklab, EntityManagerInterface $entityManager): Response
     {

@@ -13,9 +13,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+
 #[Route('/task', name: 'app_task_')]
 class TaskController extends AbstractController
 {
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param ListeRepository $listeRepository
+     * @param WorklabRepository $worklabRepository
+     * @return Response
+     */
     #[Route('/create', name: 'create', methods: ['POST'])]
     public function create(
         Request                $request,
@@ -61,6 +69,12 @@ class TaskController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param TaskRepository $taskRepository
+     * @return Response
+     */
     #[Route('/editName', name: 'edit', methods: ['PATCH'])]
     public function editName(Request $request, EntityManagerInterface $entityManager, TaskRepository $taskRepository): Response
     {
@@ -91,7 +105,11 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @throws Exception
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param TaskRepository $taskRepository
+     * @param ListeRepository $listeRepository
+     * @return Response
      */
     #[Route('/dragAndDrop', name: 'dragAndDrop', methods: ['PATCH'])]
     public function dragAndDrop(

@@ -10,6 +10,7 @@ use App\Repository\TaskRepository;
 use App\Repository\WorklabRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,6 +20,12 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/liste', name: 'app_liste_')]
 class ListeController extends AbstractController
 {
+    /**
+     * @param $id
+     * @param ListeRepository $listeRepository
+     * @param WorklabRepository $worklabRepository
+     * @return JsonResponse
+     */
     #[Route('/getAll/{id}', name: 'get')]
     public function get($id, ListeRepository $listeRepository, WorklabRepository $worklabRepository): JsonResponse
     {
@@ -76,6 +83,12 @@ class ListeController extends AbstractController
 
     }
 
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param WorklabRepository $worklabRepository
+     * @return Response
+     */
     #[Route('/create', name: 'create', methods: ['POST'])]
     public function create(
 
@@ -117,6 +130,12 @@ class ListeController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param ListeRepository $listeRepository
+     * @return Response
+     */
     #[Route('/delete', name: 'delete', methods: ['DELETE'])]
     public function delete(
         Request                $request,
@@ -141,6 +160,13 @@ class ListeController extends AbstractController
             'isSuccessfull' => true,
         ]);
     }
+
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param ListeRepository $listeRepository
+     * @return Response
+     */
     #[Route('/editName', name: 'edit', methods: ['PATCH'])]
     public function edit(Request $request, EntityManagerInterface $entityManager, ListeRepository $listeRepository): Response
     {
@@ -170,6 +196,12 @@ class ListeController extends AbstractController
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param ListeRepository $listeRepository
+     * @return Response
+     */
     #[Route('/dragAndDrop', name: 'dragAndDrop', methods: ['PATCH'])]
     public function dragAndDrop
     (Request $request,
